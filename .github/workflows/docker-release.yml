@@ -29,8 +29,9 @@ jobs:
       # Push to GHCR
       - name: Push to Github registry
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push ghcr.io/$GITHUB_ACTOR/$IMAGE_NAME:${{ github.event.release.tag_name }}
+          GITHUB_ACTOR_LOWER=$(echo $GITHUB_ACTOR | tr '[:upper:]' '[:lower:]')
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR_LOWER --password-stdin
+          docker push ghcr.io/$GITHUB_ACTOR_LOWER/$IMAGE_NAME:${{ github.event.release.tag_name }}
 
       # Package chart as tgz file
       - name: Package Helm chart
