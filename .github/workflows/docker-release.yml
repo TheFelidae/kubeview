@@ -25,13 +25,13 @@ jobs:
       # Build the image taged with the release tag, this is the semver taged release of the image
       - name: Build the Docker image
         run: |
-          GITHUB_ACTOR_LOWER=$(echo $GITHUB_ACTOR | tr '[:upper:]' '[:lower:]')
+          export GITHUB_ACTOR_LOWER=$(echo $GITHUB_ACTOR | tr '[:upper:]' '[:lower:]')
           docker build . --file ./build/Dockerfile --build-arg version="${{ github.event.release.tag_name }}" --build-arg buildInfo="GitHub release build dated:$(date -I)" --tag ghcr.io/$GITHUB_ACTOR_LOWER/$IMAGE_NAME:${{ github.event.release.tag_name }}
 
       # Push to GHCR
       - name: Push to Github registry
         run: |
-          GITHUB_ACTOR_LOWER=$(echo $GITHUB_ACTOR | tr '[:upper:]' '[:lower:]')
+          export GITHUB_ACTOR_LOWER=$(echo $GITHUB_ACTOR | tr '[:upper:]' '[:lower:]')
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR_LOWER --password-stdin
           docker push ghcr.io/$GITHUB_ACTOR_LOWER/$IMAGE_NAME:${{ github.event.release.tag_name }}
 
